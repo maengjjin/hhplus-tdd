@@ -25,7 +25,7 @@ public class PointService {
         ValidatorAmount.minChargeAmount(amount);
 
         UserPoint userPoint = pointTable.selectById(id);
-        userPoint = pointTable.insertOrUpdate(userPoint.id(),amount);
+        userPoint = pointTable.insertOrUpdate(userPoint.id(),userPoint.point() + amount);
 
         historyTable.insert(userPoint.id(), userPoint.point(), TransactionType.CHARGE, userPoint.updateMillis());
 
