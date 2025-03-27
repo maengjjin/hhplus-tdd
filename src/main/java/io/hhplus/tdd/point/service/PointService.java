@@ -1,11 +1,13 @@
-package io.hhplus.tdd.point;
+package io.hhplus.tdd.point.service;
 
-import io.hhplus.tdd.database.PointHistoryTable;
-import io.hhplus.tdd.database.UserPointTable;
-import java.awt.Point;
+import io.hhplus.tdd.point.common.ValidatorAmount;
+import io.hhplus.tdd.point.entity.PointHistory;
+import io.hhplus.tdd.point.entity.UserPoint;
+import io.hhplus.tdd.point.common.TransactionType;
+import io.hhplus.tdd.point.repository.PointHistoryTable;
+import io.hhplus.tdd.point.repository.UserPointTable;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,14 +19,13 @@ public class PointService {
     private final PointHistoryTable historyTable;
 
 
-    public UserPoint chargePoint(long id, long point) {
+    public UserPoint chargePoint(long id, long amount) {
 
-        if(point <= 0){
-            throw new IllegalArgumentException();
-        }
+        ValidatorAmount.maxChargeAmount(amount);
+        ValidatorAmount.minChargeAmount(amount);
 
         UserPoint userPoint = pointTable.selectById(id);
-        userPoint = pointTable.insertOrUpdate(userPoint.id(),point);
+        userPoint = pointTable.insertOrUpdate(userPoint.id(),amount);
 
         historyTable.insert(userPoint.id(), userPoint.point(), TransactionType.CHARGE, userPoint.updateMillis());
 
