@@ -1,6 +1,6 @@
-package io.hhplus.tdd.point;
+package io.hhplus.tdd.point.entity;
 
-public record UserPoint(
+public record UserPoint (
     long id,
     long point,
     long updateMillis
